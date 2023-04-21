@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
 
-    // Display a listing of the resource.
+    // Display a listing of the categories.
 
     public function index()
     {
@@ -19,7 +19,7 @@ class CategoryController extends Controller
     }
 
 
-    // Show the form for creating a new resource.
+    // Show the form for creating a new category.
 
     public function create()
     {
@@ -29,7 +29,7 @@ class CategoryController extends Controller
     }
 
 
-    // Store a newly created resource in storage.
+    // Store a newly created category in storage.
 
     public function store(Request $request)
     {
@@ -48,13 +48,13 @@ class CategoryController extends Controller
         } catch (\Exception $ex) {
             DB::rollBack();
 
-             redirect()->back()->throwResponse();
+            redirect()->back()->throwResponse();
         }
         return redirect()->route('admin.categories.index');
     }
 
 
-    // Show the form for editing the specified resource.
+    // Show the form for editing the specified category.
 
     public function edit(Category $category)
     {
@@ -64,7 +64,7 @@ class CategoryController extends Controller
     }
 
 
-    // Update the specified resource in storage.
+    // Update the specified category in storage.
 
     public function update(Request $request, Category $category)
     {
@@ -81,13 +81,13 @@ class CategoryController extends Controller
         } catch (\Exception $ex) {
             DB::rollBack();
 
-             redirect()->back()->throwResponse();
+            redirect()->back()->throwResponse();
         }
         return redirect()->route('admin.categories.index');
     }
 
 
-    //Remove the specified resource from storage.
+    //Remove the specified category from storage.
 
     public function destroy(Category $category)
     {
@@ -97,28 +97,28 @@ class CategoryController extends Controller
             DB::commit();
 
 
-        }catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             DB::rollBack();
 
-           redirect()->back()->throwResponse();
+            redirect()->back()->throwResponse();
         }
 
         return redirect()->route('admin.categories.index');
     }
 
+    //Recursive deletion of a category and its subcategories
     private function deleteCategory($category)
     {
-        if ($category->children()->count()>0){
-            foreach ($category->children as $child){
+        if ($category->children()->count() > 0) {
+            foreach ($category->children as $child) {
                 $this->deleteCategory($child);
             }
         }
 
         $category->delete();
     }
-    /**
-     * @param Request $request
-     */
+
+    //validate title
     private function validateTitleIsValid(Request $request)
     {
         $request->validate([
